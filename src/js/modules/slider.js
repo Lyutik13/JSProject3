@@ -15,6 +15,21 @@ export default class Slider {
 			this.slideIndex = this.slides.length
 		}
 
+    // скрываем на 3-м слайде модалку
+		try {
+			this.hanson.style.opacity = '0'
+
+      if (n === 3) {
+        this.hanson.classList.add('animate__animated')
+        setTimeout(() => {
+          this.hanson.style.opacity = 1 
+          this.hanson.classList.add('animate__fadeInUp')
+        }, 3000)
+      } else {
+        this.hanson.classList.remove('animate__fadeInUp')
+      }
+		} catch (e) {}
+
 		this.slides.forEach((slide) => {
 			slide.style.display = 'none'
 		})
@@ -27,6 +42,11 @@ export default class Slider {
 	}
 
 	render() {
+		// обработчик ошибки для ....hanson
+		try {
+			this.hanson = document.querySelector('.hanson')
+		} catch (e) {}
+
 		this.btns.forEach((item) => {
 			item.addEventListener('click', () => {
 				this.plusSlides(1)

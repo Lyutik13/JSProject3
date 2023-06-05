@@ -1,52 +1,46 @@
 'use strict'
 
-const gulp = require('gulp')
+const { src, dest, watch, parallel } = require('gulp')
 const webpack = require('webpack-stream')
-const browsersync = require('browser-sync')
+const browserSync = require('browser-sync').create()
 
 const dist = './dist/'
 // const dist = "V:/for_programing/ospanel/domains/test";
 
-gulp.task('copy-html', () => {
-	return gulp
-		.src('./src/*.html')
-		.pipe(gulp.dest(dist))
-		.pipe(browsersync.stream())
-})
+function html() {
+	return src(['./src/*.html'], { base: 'src' }).pipe(dest(dist))
+}
 
-gulp.task('build-js', () => {
-	return gulp
-		.src('./src/js/script.js')
-    .pipe(webpack(require('./webpack.config.js')))
-		.pipe(gulp.dest(dist))
-		.on('end', browsersync.reload)
-})
+function scripts() {
+	return src('./src/js/script.js')
+		.pipe(webpack(require('./webpack.config.js')))
+		.pipe(dest(dist + '/js'))
+		.pipe(browserSync.stream())
+}
 
-gulp.task('copy-assets', () => {
-	return gulp
-		.src('./src/assets/**/*.*')
-		.pipe(gulp.dest(dist + '/assets'))
-		.on('end', browsersync.reload)
-})
+function bilds() {
+	return src('./src/assets/**/*.*')
+		.pipe(dest(dist + '/assets'))
+		// .pipe(browserSync.stream())
+}
 
-gulp.task('watch', () => {
-	browsersync.init({
+function watching() {
+	browserSync.init({
 		server: {
 			baseDir: './dist/',
-      // несколько страниц html
+			// несколько страниц html
 			serveStaticOptions: {
 				extensions: ['html'],
 			},
 		},
 		port: 4000,
-		notify: true,
+		notify: true, // Отключаем уведомления
+		online: true, //Режим работы: true или false
 	})
 
-	gulp.watch('./src/*.html', gulp.parallel('copy-html'))
-	gulp.watch('./src/assets/**/*.*', gulp.parallel('copy-assets'))
-	gulp.watch('./src/js/**/*.js', gulp.parallel('build-js'))
-})
+	watch(['./src/*.html'], html).on('change', browserSync.reload)
+	watch(['./src/js/**/*.js'], scripts)
+	watch(['./src/assets/**/*.*'], bilds)
+}
 
-gulp.task('build', gulp.parallel('copy-html', 'copy-assets', 'build-js'))
-
-gulp.task('default', gulp.parallel('watch', 'build'))
+exports.default = parallel(watching, html, scripts, bilds)
