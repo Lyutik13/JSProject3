@@ -33,7 +33,7 @@ function watching() {
 				extensions: ['html'],
 			},
 		},
-		port: 4000,
+		port: 3000,
 		notify: true, // Отключаем уведомления
 		online: true, //Режим работы: true или false
 	})
