@@ -9,7 +9,7 @@ export default class Slider {
     autoplay = false
 	} = {}) {
 		this.container = document.querySelector(container)
-		this.slides = this.container.children
+		try {this.slides = this.container.children} catch(e) {}
 		this.btns = document.querySelectorAll(btns)
 		this.next = document.querySelector(next)
 		this.prev = document.querySelector(prev)
