@@ -5,7 +5,7 @@ const webpack = require('webpack-stream')
 const browserSync = require('browser-sync').create()
 
 const dist = './dist/'
-// const dist = "V:/for_programing/ospanel/domains/test";
+// const dist = "V:/for_programing/ospanel/domains/test"
 
 function html() {
 	return src(['./src/*.html'], { base: 'src' }).pipe(dest(dist))
