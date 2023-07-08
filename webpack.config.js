@@ -4,7 +4,7 @@ const path = require('path')
 
 module.exports = {
 	// production development
-	mode: 'development',
+	mode: 'production',
 	entry: './src/js/script.js',
 	output: {
 		filename: 'bundle.js',
